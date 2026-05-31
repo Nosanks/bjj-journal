@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BJJ Journal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #e8e8e8;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1a1a;
+      border-bottom: 2px solid #1a6fc4;
+      padding: 20px 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    header .logo { font-size: 28px; }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+
+    header p {
+      font-size: 13px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 32px;
+      background: #141414;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    .tab {
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
+
+    .tab:hover { color: #ccc; }
+    .tab.active { color: #1a6fc4; border-bottom-color: #1a6fc4; }
+
+    .content { padding: 28px 32px; max-width: 900px; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* Sessions */
+    .session-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+      transition: border-color 0.15s;
+    }
+
+    .session-card:hover { border-color: #444; }
+
+    .session-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .session-date {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .session-num {
+      font-size: 12px;
+      color: #888;
+      background: #252525;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-gi { background: #1a3a5c; color: #5ba3f5; }
+    .badge-nogi { background: #3a2a10; color: #f5a623; }
+
+    .energy-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .energy-label { font-size: 12px; color: #666; width: 52px; }
+
+    .energy-bar {
+      flex: 1;
+      height: 6px;
+      background: #2a2a2a;
+      border-radius: 3px;
+      overflow: hidden;
+      max-width: 160px;
+    }
+
+    .energy-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #1a6fc4, #378ADD);
+    }
+
+    .energy-val { font-size: 12px; color: #aaa; }
+
+    .session-row { margin-bottom: 8px; }
+
+    .session-row label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #555;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .session-row p {
+      font-size: 14px;
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    .move-chip {
+      display: inline-block;
+      background: #2a1a1a;
+      border: 1px solid #1a6fc444;
+      color: #e08080;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin: 2px 4px 2px 0;
+    }
+
+    /* Positions */
+    .position-card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .position-header {
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .position-header:hover { background: #222; }
+
+    .position-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .position-count {
+      font-size: 12px;
+      background: #1a6fc4;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .position-count.empty {
+      background: #2a2a2a;
+      color: #555;
+    }
+
+    .chevron {
+      color: #555;
+      font-size: 12px;
+      margin-left: 10px;
+      transition: transform 0.2s;
+    }
+
+    .position-card.open .chevron { transform: rotate(180deg); }
+
+    .position-body {
+      display: none;
+      border-top: 1px solid #2a2a2a;
+      padding: 16px 20px;
+    }
+
+    .position-card.open .position-body { display: block; }
+
+    .sub-section { margin-bottom: 18px; }
+
+    .sub-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1a6fc4;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .note-item {
+      display: flex;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid #222;
+      align-items: flex-start;
+    }
+
+    .note-item:last-child { border-bottom: none; }
+
+    .note-date {
+      font-size: 11px;
+      color: #555;
+      white-space: nowrap;
+      padding-top: 2px;
+      min-width: 80px;
+    }
+
+    .note-text { font-size: 14px; color: #ccc; line-height: 1.5; }
+
+    .empty-msg {
+      font-size: 13px;
+      color: #444;
+      font-style: italic;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 16px 20px;
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .stat-num { font-size: 28px; font-weight: 800; color: #1a6fc4; }
+    .stat-label { font-size: 12px; color: #666; margin-top: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🥋</div>
+  <div>
+    <h1>BJJ Journal</h1>
+    <p>Track sessions, moves & positions</p>
+  </div>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('sessions')">Sessions</div>
+  <div class="tab" onclick="switchTab('positions')">Positions & Moves</div>
+</div>
+
+<div class="content">
+
+  <!-- SESSIONS PANEL -->
+  <div id="panel-sessions" class="panel active">
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Total Sessions</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Moves Learned</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">5</div>
+        <div class="stat-label">Avg Energy</div>
+      </div>
+    </div>
+
+    <!-- Session 4 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">May 31, 2026</span>
+        <span class="session-num">Session 4</span>
+        <span class="badge badge-nogi">No-Gi</span>
+      </div>
+      <div class="energy-bar-wrap">
+        <span class="energy-label">Energy</span>
+        <div class="energy-bar"><div class="energy-fill" style="width:50%"></div></div>
+        <span class="energy-val">5 / 10</span>
+      </div>
+      <div class="session-row">
+        <label>Moves Worked On</label>
+        <div><span class="move-chip">X-Guard Sweep</span></div>
+      </div>
+      <div class="session-row">
+        <label>How It Went</label>
+        <p>Went well.</p>
+      </div>
+    </div>
+
+    <!-- Session 3 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">May 30, 2026</span>
+        <span class="session-num">Session 3</span>
+        <span class="badge badge-gi">Gi</span>
+      </div>
+      <div class="energy-bar-wrap">
+        <span class="energy-label">Energy</span>
+        <div class="energy-bar"><div class="energy-fill" style="width:50%"></div></div>
+        <span class="energy-val">5 / 10</span>
+      </div>
+      <div class="session-row">
+        <label>Moves Worked On</label>
+        <div><span class="move-chip">Butterfly Sweep</span></div>
+      </div>
+      <div class="session-row">
+        <label>How It Went</label>
+        <p>OK.</p>
+      </div>
+    </div>
+
+    <!-- Session 2 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">May 30, 2026</span>
+        <span class="session-num">Session 2</span>
+      </div>
+      <div class="energy-bar-wrap">
+        <span class="energy-label">Energy</span>
+        <div class="energy-bar"><div class="energy-fill" style="width:50%"></div></div>
+        <span class="energy-val">5 / 10</span>
+      </div>
+      <div class="session-row">
+        <label>Moves Worked On</label>
+        <div>
+          <span class="move-chip">X-Guard Sweep</span>
+          <span class="move-chip">Knee-on-Knee Sweep</span>
+        </div>
+      </div>
+      <div class="session-row">
+        <label>How It Went</label>
+        <p>Went well overall.</p>
+      </div>
+    </div>
+
+    <!-- Session 1 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">May 30, 2026</span>
+        <span class="session-num">Session 1</span>
+      </div>
+      <div class="session-row">
+        <label>Moves Worked On</label>
+        <div><span class="move-chip">X-Guard Sweep</span></div>
+      </div>
+      <div class="session-row">
+        <label>How It Went</label>
+        <p>Well overall.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- POSITIONS PANEL -->
+  <div id="panel-positions" class="panel">
+
+    <!-- Sweeps -->
+    <div class="position-card open">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Sweeps</span>
+          <span class="position-count">3 moves</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <div class="sub-section">
+          <div class="sub-title">X-Guard Sweep</div>
+          <div class="note-item">
+            <span class="note-date">2026-05-30</span>
+            <span class="note-text">X-guard sweep</span>
+          </div>
+          <div class="note-item">
+            <span class="note-date">2026-05-31</span>
+            <span class="note-text">X-guard sweep (No-Gi)</span>
+          </div>
+        </div>
+        <div class="sub-section">
+          <div class="sub-title">Knee-on-Knee Sweep</div>
+          <div class="note-item">
+            <span class="note-date">2026-05-30</span>
+            <span class="note-text">Knee-on-knee sweep from guard</span>
+          </div>
+        </div>
+        <div class="sub-section">
+          <div class="sub-title">Butterfly Sweep</div>
+          <div class="note-item">
+            <span class="note-date">2026-05-30</span>
+            <span class="note-text">Butterfly sweep (Gi)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guard -->
+    <div class="position-card open">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Guard</span>
+          <span class="position-count">1 note</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <div class="sub-section">
+          <div class="sub-title">X-Guard</div>
+          <div class="note-item">
+            <span class="note-date">2026-05-30</span>
+            <span class="note-text">Learned the x-guard sweep. Session felt good overall.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mount -->
+    <div class="position-card">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Mount</span>
+          <span class="position-count empty">0 notes</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <p class="empty-msg">No notes yet.</p>
+      </div>
+    </div>
+
+    <!-- Back Control -->
+    <div class="position-card">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Back Control</span>
+          <span class="position-count empty">0 notes</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <p class="empty-msg">No notes yet.</p>
+      </div>
+    </div>
+
+    <!-- Side Control -->
+    <div class="position-card">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Side Control</span>
+          <span class="position-count empty">0 notes</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <p class="empty-msg">No notes yet.</p>
+      </div>
+    </div>
+
+    <!-- Chokes -->
+    <div class="position-card">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Chokes</span>
+          <span class="position-count empty">0 notes</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <p class="empty-msg">No notes yet.</p>
+      </div>
+    </div>
+
+    <!-- Submissions -->
+    <div class="position-card">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Submissions</span>
+          <span class="position-count empty">0 notes</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <p class="empty-msg">No notes yet.</p>
+      </div>
+    </div>
+
+    <!-- Escapes -->
+    <div class="position-card">
+      <div class="position-header" onclick="toggleCard(this)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="position-title">Escapes</span>
+          <span class="position-count empty">0 notes</span>
+        </div>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="position-body">
+        <p class="empty-msg">No notes yet.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`#panel-${name}`).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function toggleCard(header) {
+    const card = header.closest('.position-card');
+    card.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
