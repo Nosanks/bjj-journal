@@ -292,6 +292,7 @@
 <div class="tabs">
   <div class="tab active" onclick="switchTab('sessions')">Sessions</div>
   <div class="tab" onclick="switchTab('positions')">Positions & Moves</div>
+  <div class="tab" onclick="switchTab('workon')">Work On</div>
 </div>
 
 <div class="content">
@@ -301,16 +302,76 @@
 
     <div class="stats-row">
       <div class="stat-box">
-        <div class="stat-num">4</div>
+        <div class="stat-num">6</div>
         <div class="stat-label">Total Sessions</div>
       </div>
       <div class="stat-box">
-        <div class="stat-num">4</div>
+        <div class="stat-num">8</div>
         <div class="stat-label">Moves Learned</div>
       </div>
       <div class="stat-box">
         <div class="stat-num">5</div>
         <div class="stat-label">Avg Energy</div>
+      </div>
+    </div>
+
+    <!-- Session 6 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">June 1, 2026</span>
+        <span class="session-num">Session 6</span>
+        <span class="badge badge-nogi">No-Gi</span>
+      </div>
+      <div class="energy-bar-wrap">
+        <span class="energy-label">Energy</span>
+        <div class="energy-bar"><div class="energy-fill" style="width:20%"></div></div>
+        <span class="energy-val">1 / 5</span>
+      </div>
+      <div class="session-row">
+        <label>Moves Worked On</label>
+        <div><span class="move-chip">Arm Bar</span><span class="move-chip">Scissor Sweep</span></div>
+      </div>
+      <div class="session-row">
+        <label>How It Went</label>
+        <p>3/5.</p>
+      </div>
+      <div class="session-row">
+        <label>Personal Performance</label>
+        <p>Did alright, not the greatest but OK.</p>
+      </div>
+      <div class="session-row">
+        <label>Work On</label>
+        <p>Escapes and sweeps</p>
+      </div>
+    </div>
+
+    <!-- Session 5 -->
+    <div class="session-card">
+      <div class="session-header">
+        <span class="session-date">June 1, 2026</span>
+        <span class="session-num">Session 5</span>
+        <span class="badge badge-gi">Gi</span>
+      </div>
+      <div class="energy-bar-wrap">
+        <span class="energy-label">Energy</span>
+        <div class="energy-bar"><div class="energy-fill" style="width:100%"></div></div>
+        <span class="energy-val">10 / 10</span>
+      </div>
+      <div class="session-row">
+        <label>Moves Worked On</label>
+        <div><span class="move-chip">Armbar</span><span class="move-chip">Ankle Lock</span></div>
+      </div>
+      <div class="session-row">
+        <label>How It Went</label>
+        <p>Really well — 5/5.</p>
+      </div>
+      <div class="session-row">
+        <label>Personal Performance</label>
+        <p>Felt strong and very energetic.</p>
+      </div>
+      <div class="session-row">
+        <label>Work On</label>
+        <p>Sweeps</p>
       </div>
     </div>
 
@@ -408,7 +469,7 @@
       <div class="position-header" onclick="toggleCard(this)">
         <div style="display:flex;align-items:center;gap:10px">
           <span class="position-title">Sweeps</span>
-          <span class="position-count">3 moves</span>
+          <span class="position-count">4 moves</span>
         </div>
         <span class="chevron">▼</span>
       </div>
@@ -436,6 +497,13 @@
           <div class="note-item">
             <span class="note-date">2026-05-30</span>
             <span class="note-text">Butterfly sweep (Gi)</span>
+          </div>
+        </div>
+        <div class="sub-section">
+          <div class="sub-title">Scissor Sweep</div>
+          <div class="note-item">
+            <span class="note-date">2026-06-01</span>
+            <span class="note-text">Make sure to use both legs.</span>
           </div>
         </div>
       </div>
@@ -518,16 +586,33 @@
     </div>
 
     <!-- Submissions -->
-    <div class="position-card">
+    <div class="position-card open">
       <div class="position-header" onclick="toggleCard(this)">
         <div style="display:flex;align-items:center;gap:10px">
           <span class="position-title">Submissions</span>
-          <span class="position-count empty">0 notes</span>
+          <span class="position-count">2 moves</span>
         </div>
         <span class="chevron">▼</span>
       </div>
       <div class="position-body">
-        <p class="empty-msg">No notes yet.</p>
+        <div class="sub-section">
+          <div class="sub-title">Armbar</div>
+          <div class="note-item">
+            <span class="note-date">2026-06-01</span>
+            <span class="note-text">Keep the hips tight and make sure feet are on the ground.</span>
+          </div>
+          <div class="note-item">
+            <span class="note-date">2026-06-01</span>
+            <span class="note-text">Keep knees tight on arm.</span>
+          </div>
+        </div>
+        <div class="sub-section">
+          <div class="sub-title">Ankle Lock</div>
+          <div class="note-item">
+            <span class="note-date">2026-06-01</span>
+            <span class="note-text">Make sure knee is in the right knee line.</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -546,6 +631,32 @@
     </div>
 
   </div>
+
+  <!-- WORK ON PANEL -->
+  <div id="panel-workon" class="panel">
+    <p style="font-size:13px;color:#666;margin-bottom:20px;">Things you've mentioned wanting to work on, sorted by how often they come up.</p>
+    <div id="workon-list">
+      <div class="position-card open" style="margin-bottom:10px;">
+        <div class="position-header" style="cursor:default;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="position-title">Sweeps</span>
+            <span class="position-count">1×</span>
+          </div>
+          <span style="font-size:12px;color:#666;">Last: June 1, 2026</span>
+        </div>
+      </div>
+      <div class="position-card open" style="margin-bottom:10px;">
+        <div class="position-header" style="cursor:default;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="position-title">Escapes and sweeps</span>
+            <span class="position-count">1×</span>
+          </div>
+          <span style="font-size:12px;color:#666;">Last: June 1, 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script>
